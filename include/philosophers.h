@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lozkuro <lozkuro@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 08:37:51 by lscarcel          #+#    #+#             */
-/*   Updated: 2024/07/29 11:43:53 by lscarcel         ###   ########.fr       */
+/*   Updated: 2024/07/31 16:39:38 by lozkuro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,10 @@
 # include <stdlib.h>
 # include <stdio.h>
 # include <string.h>
+# include <pthread.h>
+# include <sys/time.h>
+# include <unistd.h>
+
 
 # define PHILOSOPHERS_H
 # define TRUE		1
@@ -25,23 +29,40 @@
 
 // -- Structures -- //
 
-typedef struct s_args
+typedef struct s_table
 {
-	int		number_of_philosophers;
-	int		time_to_die;
-	int		time_to_eat;
-	int		time_to_sleep;
-	int		number_of_times_each_philosopher_must_eat;
-	int		argc;
-	char	**argv;
-}	t_args;
+	int			number_of_philosophers;
+	int			time_to_die;
+	int			time_to_eat;
+	int			time_to_sleep;
+	int			number_of_times_each_philosopher_must_eat;
+	int			argc;
+	char		**argv;
+	t_philos	philos;
+}	t_table;
 
-typedef struct s_philo
+typedef struct s_philos
 {
-	t_args	args;
-}	t_philo;
+	int			last_meal;
+	int			is_full;
+	t_fork		l_fork;
+	t_fork		r_fork;
+	pthread_t	thread_id;
+	t_table		table;
+}	t_philos;
 
+typedef struct s_fork
+{
+	pthread_mutex_t		fork;
+	int					fork_id;
+}	t_fork;
 
+//    int gettimeofday(struct timeval *tv, struct timezone *tz);
+typedef struct s_timeval 
+{
+    time_t      tv_sec;     /* seconds */
+    suseconds_t tv_usec;    /* microseconds */
+}	t_timeval;
 // Main
 void	init_struct(t_philo *philo, char **argv, int argc);
 int		only_unsigned_int(char **argv);

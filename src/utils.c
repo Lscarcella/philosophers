@@ -3,28 +3,28 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lozkuro <lozkuro@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 08:06:39 by lscarcel          #+#    #+#             */
-/*   Updated: 2024/07/29 11:42:14 by lscarcel         ###   ########.fr       */
+/*   Updated: 2024/07/31 21:54:09 by lozkuro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philosophers.h"
 
-void	init_struct(t_philo *philo, char **argv, int argc)
+void	init_struct(t_philos *philo, char **argv, int argc)
 {
-	memset(&philo->args, 0, sizeof(philo->args));
-	philo->args.argc = argc;
-	philo->args.argv = argv;
-	philo->args.number_of_philosophers = ft_atoi(argv[1]);
-	philo->args.time_to_die = ft_atoi(argv[2]);
-	philo->args.time_to_eat = ft_atoi(argv[3]);
-	philo->args.time_to_sleep = ft_atoi(argv[4]);
+	memset(&philo->table, 0, sizeof(philo->table));
+	philo->table.argc = argc;
+	philo->table.argv = argv;
+	philo->table.number_of_philosophers = ft_atoi(argv[1]);
+	philo->table.time_to_die = ft_atoi(argv[2]);
+	philo->table.time_to_eat = ft_atoi(argv[3]);
+	philo->table.time_to_sleep = ft_atoi(argv[4]);
 	if (argc == 6)
-		philo->args.number_of_times_each_philosopher_must_eat = ft_atoi(argv[5]);
+		philo->table.number_of_times_each_philosopher_must_eat = ft_atoi(argv[5]);
 	else 
-		philo->args.number_of_times_each_philosopher_must_eat = -1;
+		philo->table.number_of_times_each_philosopher_must_eat = -1;
 }
 
 int	only_unsigned_int(char **argv)
@@ -33,14 +33,22 @@ int	only_unsigned_int(char **argv)
 	int	j;
 	
 	i = 0;
-	
 	while(argv[i])
 	{
+		if (argv[i][0] == '\0')
+		{
+			i++;
+			printf(COLOR_RED "Error " COLOR_WHITE": argv[%d] is empty\n", i);
+			return (FALSE);
+		}
 		j = 0;
 		while(argv[i][j])
 		{
 			if (argv[i][j] < '0' || argv[i][j] > '9')
+			{
+				printf(COLOR_RED "Error " COLOR_WHITE": args must be unsigned integers\n" );
 				return (FALSE);
+			}
 			j++;
 		}
 		i++;
@@ -75,4 +83,17 @@ int	ft_atoi(const char *str)
 		i++;
 	}
 	return (result * sign);
+}
+
+void	*safe_malloc(size_t bytes)
+{
+	char *memory;
+
+	memory = malloc(sizeof(char) * bytes);
+	if (memory == NULL)
+	{
+		printf("Error with the malloc of %d bytes\n", bytes);
+		return NULL;
+	}
+	return (memory);
 }
