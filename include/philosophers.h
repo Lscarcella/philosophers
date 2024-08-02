@@ -6,7 +6,7 @@
 /*   By: lozkuro <lozkuro@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 08:37:51 by lscarcel          #+#    #+#             */
-/*   Updated: 2024/07/31 16:39:38 by lozkuro          ###   ########.fr       */
+/*   Updated: 2024/08/02 14:03:57 by lozkuro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,33 +29,38 @@
 
 // -- Structures -- //
 
-typedef struct s_table
+typedef struct s_table t_table;
+typedef struct s_fork
 {
-	int			number_of_philosophers;
-	int			time_to_die;
-	int			time_to_eat;
-	int			time_to_sleep;
-	int			number_of_times_each_philosopher_must_eat;
-	int			argc;
-	char		**argv;
-	t_philos	philos;
-}	t_table;
+    pthread_mutex_t  fork;
+    int fork_id;
+} t_fork;
 
 typedef struct s_philos
 {
-	int			last_meal;
-	int			is_full;
-	t_fork		l_fork;
-	t_fork		r_fork;
-	pthread_t	thread_id;
-	t_table		table;
-}	t_philos;
+    int id;
+    int meal_count;
+    int last_meal_time;
+    int is_full;
+    t_fork *first_fork;
+    t_fork *second_fork;
+    pthread_t thread_id;
+    t_table *table;
+} t_philos;
 
-typedef struct s_fork
+typedef struct s_table
 {
-	pthread_mutex_t		fork;
-	int					fork_id;
-}	t_fork;
+    int number_of_philosophers;
+    int time_to_die;
+    int time_to_eat;
+    int time_to_sleep;
+    int max_meals;
+    int start_simulation;
+    int end_simulation;
+    t_fork *forks;
+	t_philos *philos;
+} t_table;
+
 
 //    int gettimeofday(struct timeval *tv, struct timezone *tz);
 typedef struct s_timeval 
@@ -63,12 +68,22 @@ typedef struct s_timeval
     time_t      tv_sec;     /* seconds */
     suseconds_t tv_usec;    /* microseconds */
 }	t_timeval;
+
+
 // Main
-void	init_struct(t_philo *philo, char **argv, int argc);
-int		only_unsigned_int(char **argv);
-int		ft_atoi(const char *str);
+int	main(int argc, char **argv);
+
+// Initialisation
+void    init_data(t_table *table);
+void	init_struct(t_table *table, char **argv, int argc);
+void    init_philos(t_table *table);
+void    assign_forks(t_philos *philos, t_fork *fork, int philo_pos);
 
 // Utils
+int		only_unsigned_int(char **argv);
+int		ft_atoi(const char *str);
+void	*safe_malloc(size_t bytes);
+
 
 // Colors
 # define COLOR_BLACK "\033[0;30m" // Black

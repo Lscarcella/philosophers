@@ -6,7 +6,7 @@
 /*   By: lozkuro <lozkuro@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 08:00:41 by lscarcel          #+#    #+#             */
-/*   Updated: 2024/07/31 21:54:23 by lozkuro          ###   ########.fr       */
+/*   Updated: 2024/08/02 14:00:00 by lozkuro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,14 @@
 
 int	main(int argc, char **argv)
 {
-	t_philos philo;
+	t_table table;
 
 	if (argc == 6 || argc == 5)
 	{
 		if (only_unsigned_int(argv + 1) == FALSE)
 			return (FAIL);
-		init_struct(&philo, argv, argc);
+		init_struct(&table, argv, argc);
+		init_data(&table);
 	}
 	else
 	{

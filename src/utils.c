@@ -6,26 +6,11 @@
 /*   By: lozkuro <lozkuro@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 08:06:39 by lscarcel          #+#    #+#             */
-/*   Updated: 2024/07/31 21:54:09 by lozkuro          ###   ########.fr       */
+/*   Updated: 2024/08/02 14:03:14 by lozkuro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philosophers.h"
-
-void	init_struct(t_philos *philo, char **argv, int argc)
-{
-	memset(&philo->table, 0, sizeof(philo->table));
-	philo->table.argc = argc;
-	philo->table.argv = argv;
-	philo->table.number_of_philosophers = ft_atoi(argv[1]);
-	philo->table.time_to_die = ft_atoi(argv[2]);
-	philo->table.time_to_eat = ft_atoi(argv[3]);
-	philo->table.time_to_sleep = ft_atoi(argv[4]);
-	if (argc == 6)
-		philo->table.number_of_times_each_philosopher_must_eat = ft_atoi(argv[5]);
-	else 
-		philo->table.number_of_times_each_philosopher_must_eat = -1;
-}
 
 int	only_unsigned_int(char **argv)
 {
@@ -92,7 +77,7 @@ void	*safe_malloc(size_t bytes)
 	memory = malloc(sizeof(char) * bytes);
 	if (memory == NULL)
 	{
-		printf("Error with the malloc of %d bytes\n", bytes);
+		printf("Error with the malloc of %ld bytes\n", bytes);
 		return NULL;
 	}
 	return (memory);
