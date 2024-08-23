@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lozkuro <lozkuro@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 08:06:39 by lscarcel          #+#    #+#             */
-/*   Updated: 2024/08/02 14:03:14 by lozkuro          ###   ########.fr       */
+/*   Updated: 2024/08/23 14:15:33 by lscarcel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,4 +81,12 @@ void	*safe_malloc(size_t bytes)
 		return NULL;
 	}
 	return (memory);
+}
+
+long long	get_time(void)
+{
+	struct timeval tv;
+	
+	gettimeofday(&tv, NULL);
+	return(tv.tv_sec * 1000 + tv.tv_usec/1000);
 }

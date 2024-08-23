@@ -3,7 +3,7 @@ DEPS = ./include/philosophers.h
 RM = rm -rf
 SRC_DIR = ./src/
 NAME = philosophers
-SRC =  $(SRC_DIR)main.c $(SRC_DIR)utils.c $(SRC_DIR)init.c
+SRC =  $(SRC_DIR)main.c $(SRC_DIR)utils.c $(SRC_DIR)init.c $(SRC_DIR)routine.c
 
 # -- COLORS -- #
 BLACK=\033[0;30m# Black

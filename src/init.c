@@ -3,15 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lozkuro <lozkuro@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 16:01:30 by lozkuro           #+#    #+#             */
-/*   Updated: 2024/08/02 14:04:26 by lozkuro          ###   ########.fr       */
+/*   Updated: 2024/08/23 14:28:05 by lscarcel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philosophers.h"
 
+void	init(t_table *table, char **argv, int argc);
+void	init_struct(t_table *table, char **argv, int argc);
+void    init_data(t_table *table);
+void    init_philos(t_table *table);
+void    assign_forks(t_philos *philos, t_fork *fork, int philo_pos);
+
+void	init(t_table *table, char **argv, int argc)
+{
+	init_struct(&table, argv, argc);
+	init_data(&table);
+}
 void	init_struct(t_table *table, char **argv, int argc)
 {
 	memset(&table, 0, sizeof(table));
@@ -23,6 +34,7 @@ void	init_struct(t_table *table, char **argv, int argc)
 		table->max_meals = ft_atoi(argv[5]);
 	else 
 		table->max_meals = FALSE;
+	table->start_time = get_time();
 }
 
 void    init_data(t_table *table)
