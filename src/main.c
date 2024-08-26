@@ -6,7 +6,7 @@
 /*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 08:00:41 by lscarcel          #+#    #+#             */
-/*   Updated: 2024/08/23 14:26:51 by lscarcel         ###   ########.fr       */
+/*   Updated: 2024/08/26 16:18:53 by lscarcel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,9 @@ int	main(int argc, char **argv)
 	{
 		if (only_unsigned_int(argv + 1) == FALSE)
 			return (FAIL);
-		init(&table, argv, argc);
+		if (init(&table, argv, argc) == FAIL)
+			return(FAIL);
+		start_simulation(&table);
 	}
 	else
 	{

@@ -6,35 +6,46 @@
 /*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 16:01:30 by lozkuro           #+#    #+#             */
-/*   Updated: 2024/08/23 14:28:05 by lscarcel         ###   ########.fr       */
+/*   Updated: 2024/08/26 16:15:00 by lscarcel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philosophers.h"
 
-void	init(t_table *table, char **argv, int argc);
-void	init_struct(t_table *table, char **argv, int argc);
+int		init(t_table *table, char **argv, int argc);
+int		init_struct(t_table *table, char **argv, int argc);
 void    init_data(t_table *table);
 void    init_philos(t_table *table);
 void    assign_forks(t_philos *philos, t_fork *fork, int philo_pos);
 
-void	init(t_table *table, char **argv, int argc)
+int	init(t_table *table, char **argv, int argc)
 {
-	init_struct(&table, argv, argc);
-	init_data(&table);
+	if (init_struct(table, argv, argc) == FAIL)
+		return(FAIL);
+	init_data(table);
+	return (SUCCESS);
 }
-void	init_struct(t_table *table, char **argv, int argc)
+int	init_struct(t_table *table, char **argv, int argc)
 {
-	memset(&table, 0, sizeof(table));
+	memset(table, 0, sizeof(*table));
 	table->number_of_philosophers = ft_atoi(argv[1]);
 	table->time_to_die = ft_atoi(argv[2]);
 	table->time_to_eat = ft_atoi(argv[3]);
 	table->time_to_sleep = ft_atoi(argv[4]);
 	if (argc == 6)
+	{
 		table->max_meals = ft_atoi(argv[5]);
+		if (table->max_meals < 1)
+		{
+			printf(COLOR_RED "Error "COLOR_WHITE": philosophers must eat\n");
+			return (FAIL);
+		}
+	}
 	else 
 		table->max_meals = FALSE;
 	table->start_time = get_time();
+    pthread_mutex_init(&table->print_lock, NULL);
+	return (SUCCESS);
 }
 
 void    init_data(t_table *table)
@@ -70,6 +81,7 @@ void    init_philos(t_table *table)
         philos->is_full = FALSE;
         philos->meal_count = 0;
         philos->table = table;
+		philos->thread_id = 0;
     }
     assign_forks(philos, table->forks, i);
 }

@@ -6,7 +6,7 @@
 /*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 08:06:39 by lscarcel          #+#    #+#             */
-/*   Updated: 2024/08/23 14:15:33 by lscarcel         ###   ########.fr       */
+/*   Updated: 2024/08/26 14:56:13 by lscarcel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,4 +89,14 @@ long long	get_time(void)
 	
 	gettimeofday(&tv, NULL);
 	return(tv.tv_sec * 1000 + tv.tv_usec/1000);
+}
+
+void	print_status(t_table *table, const char *status)
+{
+	long long current_time;
+
+	pthread_mutex_lock(&table->print_lock);
+	current_time = get_time() - table->start_time;
+	printf("%lld %d %s\n", current_time, table->philos->id, status);
+	pthread_mutex_unlock(&table->print_lock);
 }

@@ -6,7 +6,7 @@
 /*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 08:37:51 by lscarcel          #+#    #+#             */
-/*   Updated: 2024/08/23 14:15:52 by lscarcel         ###   ########.fr       */
+/*   Updated: 2024/08/26 16:11:50 by lscarcel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,14 @@
 
 typedef struct s_table t_table;
 typedef struct s_timeval t_timeval;
+
+typedef struct s_monitor
+{
+	int philo_dead;
+	int max_meals;
+	pthread_mutex_t lock;
+} t_monitor;
+
 typedef struct s_fork
 {
     pthread_mutex_t  fork;
@@ -62,9 +70,10 @@ typedef struct s_table
     t_fork *forks;
 	t_philos *philos;
 	t_timeval *time;
+	pthread_mutex_t print_lock;
+	t_monitor *monitor;
 } t_table;
 
-//    int gettimeofday(struct timeval *tv, struct timezone *tz);
 typedef struct s_timeval 
 {
 	time_t      tv_sec; 	/*seconds*/
@@ -76,8 +85,9 @@ typedef struct s_timeval
 int	main(int argc, char **argv);
 
 // Initialisation
+int	init(t_table *table, char **argv, int argc);
 void    init_data(t_table *table);
-void	init_struct(t_table *table, char **argv, int argc);
+int		init_struct(t_table *table, char **argv, int argc);
 void    init_philos(t_table *table);
 void    assign_forks(t_philos *philos, t_fork *fork, int philo_pos);
 
@@ -86,6 +96,13 @@ int		only_unsigned_int(char **argv);
 int		ft_atoi(const char *str);
 void	*safe_malloc(size_t bytes);
 long long	get_time(void);
+void	print_status(t_table *table, const char *status);
+
+//routine
+void	*philo_routine(void *arg);
+void	start_simulation(t_table *table);
+int		is_eating(t_table *table);
+void	sleep_and_think(t_table *table);
 
 // Colors
 # define COLOR_BLACK "\033[0;30m" // Black
