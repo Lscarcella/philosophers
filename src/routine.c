@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   routine.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lozkuro <lozkuro@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 16:01:30 by lozkuro           #+#    #+#             */
-/*   Updated: 2024/08/26 16:24:53 by lscarcel         ###   ########.fr       */
+/*   Updated: 2024/08/27 11:15:48 by lozkuro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,9 @@ void	*philo_routine(void *arg)
 	t_table *table;
 
 	table = (t_table *)arg;
+	pthread_mutex_lock(&table->start_lock);
+	while (!table->ready)
+		pthread_mutex_unlock(&table->start_lock);
 	while (!table->end_simulation)
 	{
 		is_eating(table);
@@ -29,6 +32,7 @@ void	*philo_routine(void *arg)
 	}
 	return (NULL);
 }
+
 void	start_simulation(t_table *table)
 {
 	int i;
@@ -36,6 +40,10 @@ void	start_simulation(t_table *table)
 	i = -1;
 	while (++i < table->number_of_philosophers)
 		pthread_create(&table->philos[i].thread_id, NULL, philo_routine, &table->philos[i]);
+	i = -1;
+	pthread_mutex_lock(&table->start_lock);
+	table->ready = 1;
+	pthread_mutex_unlock(&table->start_lock);
 	i = -1;
 	while (++i < table->number_of_philosophers)
 		pthread_join(table->philos[i].thread_id, NULL);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lozkuro <lozkuro@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 08:37:51 by lscarcel          #+#    #+#             */
-/*   Updated: 2024/08/26 16:11:50 by lscarcel         ###   ########.fr       */
+/*   Updated: 2024/08/27 11:13:14 by lozkuro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,10 +67,12 @@ typedef struct s_table
     int start_simulation;
 	int start_time;
     int end_simulation;
+    int ready;
+	pthread_mutex_t print_lock;
+    pthread_mutex_t start_lock;
     t_fork *forks;
 	t_philos *philos;
 	t_timeval *time;
-	pthread_mutex_t print_lock;
 	t_monitor *monitor;
 } t_table;
 
@@ -82,27 +84,27 @@ typedef struct s_timeval
 
 
 // Main
-int	main(int argc, char **argv);
+int	        main(int argc, char **argv);
 
 // Initialisation
-int	init(t_table *table, char **argv, int argc);
-void    init_data(t_table *table);
-int		init_struct(t_table *table, char **argv, int argc);
-void    init_philos(t_table *table);
-void    assign_forks(t_philos *philos, t_fork *fork, int philo_pos);
+int	        init(t_table *table, char **argv, int argc);
+void        init_data(t_table *table);
+int		    init_struct(t_table *table, char **argv, int argc);
+void        init_philos(t_table *table);
+void        assign_forks(t_philos *philos, t_fork *fork, int philo_pos);
 
 // Utils
-int		only_unsigned_int(char **argv);
-int		ft_atoi(const char *str);
-void	*safe_malloc(size_t bytes);
+int		    only_unsigned_int(char **argv);
+int		    ft_atoi(const char *str);
+void	    *safe_malloc(size_t bytes);
 long long	get_time(void);
-void	print_status(t_table *table, const char *status);
+void	    print_status(t_table *table, const char *status);
 
 //routine
-void	*philo_routine(void *arg);
-void	start_simulation(t_table *table);
-int		is_eating(t_table *table);
-void	sleep_and_think(t_table *table);
+void	    *philo_routine(void *arg);
+void	    start_simulation(t_table *table);
+int		    is_eating(t_table *table);
+void	    sleep_and_think(t_table *table);
 
 // Colors
 # define COLOR_BLACK "\033[0;30m" // Black

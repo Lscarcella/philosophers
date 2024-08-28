@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lozkuro <lozkuro@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 16:01:30 by lozkuro           #+#    #+#             */
-/*   Updated: 2024/08/26 16:15:00 by lscarcel         ###   ########.fr       */
+/*   Updated: 2024/08/27 12:25:34 by lozkuro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ int	init_struct(t_table *table, char **argv, int argc)
 		table->max_meals = FALSE;
 	table->start_time = get_time();
     pthread_mutex_init(&table->print_lock, NULL);
+    pthread_mutex_init(&table->start_lock, NULL);
 	return (SUCCESS);
 }
 
