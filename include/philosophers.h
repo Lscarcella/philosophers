@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lozkuro <lozkuro@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 08:37:51 by lscarcel          #+#    #+#             */
-/*   Updated: 2024/08/27 11:13:14 by lozkuro          ###   ########.fr       */
+/*   Updated: 2024/08/28 14:54:28 by lscarcel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,11 +88,10 @@ int	        main(int argc, char **argv);
 
 // Initialisation
 int	        init(t_table *table, char **argv, int argc);
-void        init_data(t_table *table);
+int        	init_data(t_table *table);
 int		    init_struct(t_table *table, char **argv, int argc);
 void        init_philos(t_table *table);
-void        assign_forks(t_philos *philos, t_fork *fork, int philo_pos);
-
+void		assign_forks(t_table *table, t_fork *forks);
 // Utils
 int		    only_unsigned_int(char **argv);
 int		    ft_atoi(const char *str);
@@ -103,7 +102,7 @@ void	    print_status(t_table *table, const char *status);
 //routine
 void	    *philo_routine(void *arg);
 void	    start_simulation(t_table *table);
-int		    is_eating(t_table *table);
+void		eat(t_table *table);
 void	    sleep_and_think(t_table *table);
 
 // Colors

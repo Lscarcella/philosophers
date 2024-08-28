@@ -6,7 +6,7 @@
 /*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 08:06:39 by lscarcel          #+#    #+#             */
-/*   Updated: 2024/08/26 14:56:13 by lscarcel         ###   ########.fr       */
+/*   Updated: 2024/08/28 16:21:26 by lscarcel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,25 +70,21 @@ int	ft_atoi(const char *str)
 	return (result * sign);
 }
 
-void	*safe_malloc(size_t bytes)
+long long int	get_time(void)
 {
-	char *memory;
-
-	memory = malloc(sizeof(char) * bytes);
-	if (memory == NULL)
-	{
-		printf("Error with the malloc of %ld bytes\n", bytes);
-		return NULL;
-	}
-	return (memory);
-}
-
-long long	get_time(void)
-{
-	struct timeval tv;
+	static struct timeval start_time = {-1, -1};
+	struct timeval current_time;
+	long long int elapsed_time;
 	
-	gettimeofday(&tv, NULL);
-	return(tv.tv_sec * 1000 + tv.tv_usec/1000);
+	if(start_time.tv_sec == -1 && start_time.tv_usec == -1)
+	{
+		gettimeofday(&start_time, NULL);
+	}
+	gettimeofday(&current_time, NULL);
+	elapsed_time = ((current_time.tv_sec * 1000) + (current_time.tv_usec /1000))
+					- ((start_time.tv_sec * 1000) + (start_time.tv_usec /1000));
+	
+	return(elapsed_time);
 }
 
 void	print_status(t_table *table, const char *status)
@@ -100,3 +96,4 @@ void	print_status(t_table *table, const char *status)
 	printf("%lld %d %s\n", current_time, table->philos->id, status);
 	pthread_mutex_unlock(&table->print_lock);
 }
+

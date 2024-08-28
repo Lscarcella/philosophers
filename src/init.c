@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lozkuro <lozkuro@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 16:01:30 by lozkuro           #+#    #+#             */
-/*   Updated: 2024/08/27 12:25:34 by lozkuro          ###   ########.fr       */
+/*   Updated: 2024/08/28 17:48:37 by lscarcel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,28 @@
 
 int		init(t_table *table, char **argv, int argc);
 int		init_struct(t_table *table, char **argv, int argc);
-void    init_data(t_table *table);
+int		init_data(t_table *table);
 void    init_philos(t_table *table);
-void    assign_forks(t_philos *philos, t_fork *fork, int philo_pos);
+void    assign_forks(t_table *table, t_fork *fork);
 
 int	init(t_table *table, char **argv, int argc)
 {
 	if (init_struct(table, argv, argc) == FAIL)
 		return(FAIL);
-	init_data(table);
+	table->forks = malloc(sizeof(t_fork) * table->number_of_philosophers);
+	if ( table->forks == NULL)
+	{
+		printf(COLOR_RED "Error "COLOR_WHITE": Malloc failed\n");
+		return (FAIL);
+	}
+	table->philos = malloc(sizeof(t_philos) * table->number_of_philosophers);
+	if ( table->philos == NULL)
+	{
+		printf(COLOR_RED "Error "COLOR_WHITE": Malloc failed\n");
+		return (FAIL);
+	}
+	if (init_data(table) == FAIL)
+		return(FAIL);
 	return (SUCCESS);
 }
 int	init_struct(t_table *table, char **argv, int argc)
@@ -44,71 +57,56 @@ int	init_struct(t_table *table, char **argv, int argc)
 	else 
 		table->max_meals = FALSE;
 	table->start_time = get_time();
+	printf("start time : %d\n", table->start_time);
     pthread_mutex_init(&table->print_lock, NULL);
     pthread_mutex_init(&table->start_lock, NULL);
 	return (SUCCESS);
 }
 
-void    init_data(t_table *table)
+int    init_data(t_table *table)
 {
     int i;
 
     i = -1;
     table->end_simulation = FALSE;
-    table->philos = safe_malloc(sizeof(t_philos) * table->number_of_philosophers);
-    table->forks = safe_malloc(sizeof(t_fork) * table->number_of_philosophers);
     while(++i < table->number_of_philosophers)
     {
         pthread_mutex_init(&table->forks[i].fork, NULL);
         table->forks[i].fork_id = i;
     }
     init_philos(table);
+	return (SUCCESS);
 }
-
-/*
-    init everything in the table struct and init a mutex for every fork
-*/ 
 
 void    init_philos(t_table *table)
 {
     int i;
-    t_philos *philos;
 
     i = -1;
     while(++i < table->number_of_philosophers)
     {
-        philos = table->philos + i;
-        philos->id = i + 1;
-        philos->is_full = FALSE;
-        philos->meal_count = 0;
-        philos->table = table;
-		philos->thread_id = 0;
+        table->philos[i].id = i + 1;
+        table->philos[i].is_full = FALSE;
+        table->philos[i].meal_count = 0;
+        table->philos[i].table = table;
+        table->philos[i].thread_id = 0;
     }
-    assign_forks(philos, table->forks, i);
+    assign_forks(table, table->forks);
 }
-/*
-Assigns forks to philosophers in a way that minimizes the risk of deadlocks.
- 
-By default, a philosopher attempts to pick up the fork on their right (first_fork) 
-followed by the fork on their left 
-(second_fork). This function introduces an asymmetry to avoid deadlocks.
- 
-For odd-numbered philosophers (with an odd ID), the order of picking forks is reversed: 
-This asymmetry ensures that not all philosophers attempt to pick up the same fork first,
-reducing the risk of a deadlock where each philosopher holds one fork 
-and waits indefinitely for the second fork.
-*/
 
-void    assign_forks(t_philos *philos, t_fork *fork, int philo_pos)
+void assign_forks(t_table *table, t_fork *forks)
 {
-    int philo_nbr;
-    
-    philo_nbr = philos->table->number_of_philosophers;
-    philos->first_fork = &fork[(philo_pos + 1) % philo_nbr];
-    philos->second_fork = &fork[philo_pos];
-    if  (philos->id % 2)
+    int i;
+
+	i = -1;
+    while (++i < table->number_of_philosophers)
     {
-        philos->first_fork = &fork[philo_pos];
-        philos->second_fork = &fork[(philo_pos + 1) % philo_nbr];
+        table->philos[i].first_fork = &forks[i];
+        table->philos[i].second_fork = &forks[(i + 1) % table->number_of_philosophers];
+        if (table->philos[i].id % 2 == 0)
+        {
+            table->philos[i].first_fork = &forks[(i + 1) % table->number_of_philosophers];
+            table->philos[i].second_fork = &forks[i];
+        }
     }
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   routine.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lozkuro <lozkuro@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 16:01:30 by lozkuro           #+#    #+#             */
-/*   Updated: 2024/08/27 11:15:48 by lozkuro          ###   ########.fr       */
+/*   Updated: 2024/08/28 17:48:16 by lscarcel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,21 @@
 
 void	*philo_routine(void *arg)
 {
-	t_table *table;
+	t_philos *philos;
 
-	table = (t_table *)arg;
-	pthread_mutex_lock(&table->start_lock);
-	while (!table->ready)
-		pthread_mutex_unlock(&table->start_lock);
-	while (!table->end_simulation)
+	philos = (t_philos *)arg;	
+	pthread_mutex_lock(&philos->table->start_lock);
+	while (!philos->table->ready)
+		pthread_mutex_unlock(&philos->table->start_lock);
+	while (!philos->table->end_simulation)
 	{
-		is_eating(table);
-		if (table->philos->meal_count >= table->max_meals)
+		eat(philos->table);
+		if (philos->meal_count >= philos->table->max_meals)
         {
-            table->philos->is_full = TRUE;
+            philos->is_full = TRUE;
             break;
         }
-		sleep_and_think(table);
+		sleep_and_think(philos->table);
 	}
 	return (NULL);
 }
@@ -38,6 +38,10 @@ void	start_simulation(t_table *table)
 	int i;
 
 	i = -1;
+	if (table->philos == NULL)
+	{
+		printf("Error: table->philos is NULL before sim\n");
+	}
 	while (++i < table->number_of_philosophers)
 		pthread_create(&table->philos[i].thread_id, NULL, philo_routine, &table->philos[i]);
 	i = -1;
@@ -49,8 +53,13 @@ void	start_simulation(t_table *table)
 		pthread_join(table->philos[i].thread_id, NULL);
 }
 
-int	is_eating(t_table *table)
+void	eat(t_table *table)
 {
+	if (table->philos == NULL)
+	{
+		printf("Error: table->philos is NULL\n");
+		return ;
+	}
 	pthread_mutex_lock(&table->philos->first_fork->fork);
 	print_status(table, "has taken a fork");
 	pthread_mutex_lock(&table->philos->second_fork->fork);
@@ -61,8 +70,6 @@ int	is_eating(t_table *table)
 	table->philos->meal_count++;
 	pthread_mutex_unlock(&table->philos->second_fork->fork);
 	pthread_mutex_unlock(&table->philos->first_fork->fork);
-
-	return (TRUE);
 }
 
 

@@ -1,4 +1,5 @@
-CFLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -Wall -Wextra -Werror -g 
+
 DEPS = ./include/philosophers.h
 RM = rm -rf
 SRC_DIR = ./src/

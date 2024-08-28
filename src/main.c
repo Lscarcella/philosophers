@@ -6,7 +6,7 @@
 /*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 08:00:41 by lscarcel          #+#    #+#             */
-/*   Updated: 2024/08/26 16:18:53 by lscarcel         ###   ########.fr       */
+/*   Updated: 2024/08/28 15:15:23 by lscarcel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 int	main(int argc, char **argv)
 {
 	t_table table;
-
 	if (argc == 6 || argc == 5)
 	{
 		if (only_unsigned_int(argv + 1) == FALSE)
