@@ -6,7 +6,7 @@
 /*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 16:01:30 by lozkuro           #+#    #+#             */
-/*   Updated: 2024/08/28 17:48:37 by lscarcel         ###   ########.fr       */
+/*   Updated: 2024/08/29 15:28:04 by lscarcel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,12 @@ int	init(t_table *table, char **argv, int argc)
 		printf(COLOR_RED "Error "COLOR_WHITE": Malloc failed\n");
 		return (FAIL);
 	}
+	table->monitor = malloc(sizeof(t_monitor));
+	if ( table->monitor == NULL)
+	{
+		printf(COLOR_RED "Error "COLOR_WHITE": Malloc failed\n");
+		return (FAIL);
+	}
 	if (init_data(table) == FAIL)
 		return(FAIL);
 	return (SUCCESS);
@@ -55,9 +61,8 @@ int	init_struct(t_table *table, char **argv, int argc)
 		}
 	}
 	else 
-		table->max_meals = FALSE;
+		table->max_meals = 1000;
 	table->start_time = get_time();
-	printf("start time : %d\n", table->start_time);
     pthread_mutex_init(&table->print_lock, NULL);
     pthread_mutex_init(&table->start_lock, NULL);
 	return (SUCCESS);

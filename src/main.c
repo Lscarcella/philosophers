@@ -6,7 +6,7 @@
 /*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 08:00:41 by lscarcel          #+#    #+#             */
-/*   Updated: 2024/08/28 15:15:23 by lscarcel         ###   ########.fr       */
+/*   Updated: 2024/08/29 16:25:08 by lscarcel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ int	main(int argc, char **argv)
 		if (init(&table, argv, argc) == FAIL)
 			return(FAIL);
 		start_simulation(&table);
+		the_end(&table);
 	}
 	else
 	{

@@ -1,10 +1,10 @@
 CFLAGS = -Wall -Wextra -Werror -g 
-
+# -fsanitize=thread
 DEPS = ./include/philosophers.h
 RM = rm -rf
 SRC_DIR = ./src/
 NAME = philosophers
-SRC =  $(SRC_DIR)main.c $(SRC_DIR)utils.c $(SRC_DIR)init.c $(SRC_DIR)routine.c $(SRC_DIR)monitor.c
+SRC =  $(SRC_DIR)main.c $(SRC_DIR)utils.c $(SRC_DIR)init.c $(SRC_DIR)routine.c $(SRC_DIR)sauron.c
 
 # -- COLORS -- #
 BLACK=\033[0;30m# Black

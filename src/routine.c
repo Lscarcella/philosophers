@@ -6,7 +6,7 @@
 /*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 16:01:30 by lozkuro           #+#    #+#             */
-/*   Updated: 2024/08/28 17:48:16 by lscarcel         ###   ########.fr       */
+/*   Updated: 2024/08/29 16:41:15 by lscarcel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,19 +16,16 @@ void	*philo_routine(void *arg)
 {
 	t_philos *philos;
 
-	philos = (t_philos *)arg;	
-	pthread_mutex_lock(&philos->table->start_lock);
-	while (!philos->table->ready)
-		pthread_mutex_unlock(&philos->table->start_lock);
-	while (!philos->table->end_simulation)
+	philos = (t_philos *)arg;
+	while (philos->table->ready != 1)
+		usleep(1000);
+	pthread_mutex_unlock(&philos->table->start_lock);
+	while (philos->table->end_simulation != 1)
 	{
-		eat(philos->table);
+		eat(philos);
 		if (philos->meal_count >= philos->table->max_meals)
-        {
-            philos->is_full = TRUE;
             break;
-        }
-		sleep_and_think(philos->table);
+		sleep_and_think(philos);
 	}
 	return (NULL);
 }
@@ -38,58 +35,62 @@ void	start_simulation(t_table *table)
 	int i;
 
 	i = -1;
-	if (table->philos == NULL)
-	{
-		printf("Error: table->philos is NULL before sim\n");
-	}
+	pthread_mutex_lock(&table->start_lock);
 	while (++i < table->number_of_philosophers)
 		pthread_create(&table->philos[i].thread_id, NULL, philo_routine, &table->philos[i]);
-	i = -1;
-	pthread_mutex_lock(&table->start_lock);
 	table->ready = 1;
-	pthread_mutex_unlock(&table->start_lock);
 	i = -1;
+	sauron_is_watching(table);
 	while (++i < table->number_of_philosophers)
 		pthread_join(table->philos[i].thread_id, NULL);
 }
 
-void	eat(t_table *table)
+void	eat(t_philos *philos)
 {
-	if (table->philos == NULL)
+	if(philos->table->end_simulation != 1)
 	{
-		printf("Error: table->philos is NULL\n");
-		return ;
+		philos->is_full = TRUE;
+		pthread_mutex_lock(&philos->first_fork->fork);
+		print_status(philos, "has taken a fork");
+		pthread_mutex_lock(&philos->second_fork->fork);
+		print_status(philos, "has taken a fork");
+		philos->last_meal_time = get_time();
+		print_status(philos, "is eating");
+		usleep(philos->table->time_to_eat * 1000);
+		philos->meal_count++;
+		pthread_mutex_unlock(&philos->second_fork->fork);
+		pthread_mutex_unlock(&philos->first_fork->fork);
 	}
-	pthread_mutex_lock(&table->philos->first_fork->fork);
-	print_status(table, "has taken a fork");
-	pthread_mutex_lock(&table->philos->second_fork->fork);
-	print_status(table, "has taken a fork");
-	print_status(table, "is eating");
-	table->philos->last_meal_time = get_time();
-	usleep(table->time_to_eat * 1000);
-	table->philos->meal_count++;
-	pthread_mutex_unlock(&table->philos->second_fork->fork);
-	pthread_mutex_unlock(&table->philos->first_fork->fork);
+}
+
+void	usleep_moded(int time)
+{
+	int ct;
+	ct = get_time();
+	while ((ct + time) - ct < time)
+	{
+		usleep(100);
+	}
+}
+
+void	sleep_and_think(t_philos *philos)
+{
+	if(philos->table->end_simulation != 1)
+	{
+		print_status(philos, "is sleeping");
+		usleep(philos->table->time_to_sleep * 1000);
+		print_status(philos, "is thinking");
+	}
 }
 
 
-void	sleep_and_think(t_table *table)
+void	is_dead(t_table *table)
 {
-	print_status(table, "is sleeping");
-	usleep(table->time_to_sleep * 1000);
-	print_status(table, "is thinking");
-}
-
-
-int	is_dead(t_table *table)
-{
-	long time_since_last_meal;
+	long long current_time;
+	table->end_simulation = 1;
 	
-	if (table->philos->is_full == TRUE)
-		return(FALSE);
-
-	time_since_last_meal = get_time() - table->philos->last_meal_time;
-	if (time_since_last_meal > table->time_to_die)
-		return(TRUE);
-	return(FALSE);
+	pthread_mutex_lock(&table->print_lock);
+	current_time = get_time();
+	printf("%lld %d is dead\n", current_time, table->philos->id);
+	pthread_mutex_unlock(&table->print_lock);
 }

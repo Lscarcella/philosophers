@@ -6,7 +6,7 @@
 /*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 08:37:51 by lscarcel          #+#    #+#             */
-/*   Updated: 2024/08/28 14:54:28 by lscarcel         ###   ########.fr       */
+/*   Updated: 2024/08/29 16:04:28 by lscarcel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,8 @@ typedef struct s_timeval t_timeval;
 typedef struct s_monitor
 {
 	int philo_dead;
-	int max_meals;
+	int full_philos;
+	pthread_t thread_id;
 	pthread_mutex_t lock;
 } t_monitor;
 
@@ -95,15 +96,19 @@ void		assign_forks(t_table *table, t_fork *forks);
 // Utils
 int		    only_unsigned_int(char **argv);
 int		    ft_atoi(const char *str);
-void	    *safe_malloc(size_t bytes);
 long long	get_time(void);
-void	    print_status(t_table *table, const char *status);
+void		print_status(t_philos *philos, const char *status);
 
 //routine
 void	    *philo_routine(void *arg);
 void	    start_simulation(t_table *table);
-void		eat(t_table *table);
-void	    sleep_and_think(t_table *table);
+void		eat(t_philos *philos);
+void	    sleep_and_think(t_philos *philos);
+void	is_dead(t_table *table);
+
+// Monitor
+void sauron_is_watching(t_table *table);
+void the_end(t_table *table);
 
 // Colors
 # define COLOR_BLACK "\033[0;30m" // Black
