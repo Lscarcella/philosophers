@@ -6,7 +6,7 @@
 /*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 08:37:51 by lscarcel          #+#    #+#             */
-/*   Updated: 2024/08/29 16:04:28 by lscarcel         ###   ########.fr       */
+/*   Updated: 2024/08/30 17:43:41 by lscarcel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@
 # define FALSE		0
 # define SUCCESS	0
 # define FAIL		1
+# define ll_INT_MAX 9223372036854775807
+# define DEAD		0
 
 // -- Structures -- //
 
@@ -36,56 +38,61 @@ typedef struct s_monitor
 {
 	int philo_dead;
 	int full_philos;
-	pthread_t thread_id;
-	pthread_mutex_t lock;
 } t_monitor;
 
 typedef struct s_fork
 {
-    pthread_mutex_t  fork;
-    int fork_id;
+    pthread_mutex_t		fork;
+    int 				fork_id;
 } t_fork;
 
 typedef struct s_philos
 {
-    int id;
-    int meal_count;
-    int last_meal_time;
-    int is_full;
-    t_fork *first_fork;
-    t_fork *second_fork;
-    pthread_t thread_id;
-    t_table *table;
+    int 		id;
+	int 		is_dead;
+	int 		is_full;
+    int 		meal_count;
+	int 		max_meal;
+	int 		time_to_die;
+    int 		last_meal_time;
+    pthread_t	thread_id;
+    t_fork 		*first_fork;
+    t_fork 		*second_fork;
+    t_table 	*table;
 } t_philos;
 
 typedef struct s_table
 {
-    int number_of_philosophers;
-    int time_to_die;
-    int time_to_eat;
-    int time_to_sleep;
-    int max_meals;
-    int start_simulation;
-	int start_time;
-    int end_simulation;
-    int ready;
-	pthread_mutex_t print_lock;
-    pthread_mutex_t start_lock;
-    t_fork *forks;
-	t_philos *philos;
-	t_timeval *time;
-	t_monitor *monitor;
+    int					philo_nbr;
+    int 				time_to_die;
+    int 				time_to_eat;
+    int 				time_to_sleep;
+    long long int 		max_meals;
+    int 				start_simulation;
+	int 				start_time;
+    int 				end_simulation;
+    int 				ready;
+	pthread_mutex_t 	end_lock;
+	pthread_mutex_t 	meal_lock;
+	pthread_mutex_t 	print_lock;
+    t_fork 				*forks;
+	t_philos 			*philos;
+	t_timeval 			*time;
 } t_table;
-
-typedef struct s_timeval 
-{
-	time_t      tv_sec; 	/*seconds*/
-    suseconds_t tv_usec;    /* microseconds */
-}	t_timeval;
-
 
 // Main
 int	        main(int argc, char **argv);
+
+// Utils
+int		    only_unsigned_int(char **argv);
+int		    ft_atoi(const char *str);
+void 		the_end(t_table *table);
+
+// Philo_utils
+long long	get_time(void);
+int			print_status(t_philos *philos, const char *status);
+void		usleep_moded(long long int time, t_philos *philos);
+int			is_philo_dead(t_philos *philos);
 
 // Initialisation
 int	        init(t_table *table, char **argv, int argc);
@@ -93,22 +100,15 @@ int        	init_data(t_table *table);
 int		    init_struct(t_table *table, char **argv, int argc);
 void        init_philos(t_table *table);
 void		assign_forks(t_table *table, t_fork *forks);
-// Utils
-int		    only_unsigned_int(char **argv);
-int		    ft_atoi(const char *str);
-long long	get_time(void);
-void		print_status(t_philos *philos, const char *status);
 
-//routine
+// Routine
 void	    *philo_routine(void *arg);
 void	    start_simulation(t_table *table);
-void		eat(t_philos *philos);
-void	    sleep_and_think(t_philos *philos);
-void	is_dead(t_table *table);
+int			ft_eat(t_philos *philos);
+int	    	ft_sleep(t_philos *philos);
+int			ft_think(t_philos *philos);
 
-// Monitor
-void sauron_is_watching(t_table *table);
-void the_end(t_table *table);
+
 
 // Colors
 # define COLOR_BLACK "\033[0;30m" // Black

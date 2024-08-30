@@ -6,7 +6,7 @@
 /*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 08:06:39 by lscarcel          #+#    #+#             */
-/*   Updated: 2024/08/29 16:25:26 by lscarcel         ###   ########.fr       */
+/*   Updated: 2024/08/30 17:41:25 by lscarcel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,32 +70,17 @@ int	ft_atoi(const char *str)
 	return (result * sign);
 }
 
-long long int	get_time(void)
+void the_end(t_table *table)
 {
-	static struct timeval start_time = {-1, -1};
-	struct timeval current_time;
-	long long int elapsed_time;
-	
-	if(start_time.tv_sec == -1 && start_time.tv_usec == -1)
-	{
-		gettimeofday(&start_time, NULL);
-	}
-	gettimeofday(&current_time, NULL);
-	elapsed_time = ((current_time.tv_sec * 1000) + (current_time.tv_usec /1000))
-					- ((start_time.tv_sec * 1000) + (start_time.tv_usec /1000));
-	return(elapsed_time);
-}
+	int i;
 
-void	print_status(t_philos *philos, const char *status)
-{
-	long long current_time;
-	
-	if(philos->table->end_simulation != 1)
-	{
-		pthread_mutex_lock(&philos->table->print_lock);
-		current_time = get_time();
-		printf("%lld %d %s\n", current_time, philos->id, status);
-		pthread_mutex_unlock(&philos->table->print_lock);
-	}
+	i = -1;
+	free(table->philos);
+	table->philos = NULL;
+	free(table->forks);
+	table->forks = NULL;
+	pthread_mutex_destroy(&table->end_lock);
+	pthread_mutex_destroy(&table->print_lock);
+	pthread_mutex_destroy(&table->meal_lock);
 }
 
