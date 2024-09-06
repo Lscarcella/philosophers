@@ -6,19 +6,23 @@
 /*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 08:06:39 by lscarcel          #+#    #+#             */
-/*   Updated: 2024/08/30 17:41:25 by lscarcel         ###   ########.fr       */
+/*   Updated: 2024/09/06 11:53:55 by lscarcel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philosophers.h"
 
+int		only_unsigned_int(char **argv);
+int		ft_atoi(const char *str);
+void	the_end(t_table *table);
+
 int	only_unsigned_int(char **argv)
 {
 	int	i;
 	int	j;
-	
+
 	i = 0;
-	while(argv[i])
+	while (argv[i])
 	{
 		if (argv[i][0] == '\0')
 		{
@@ -27,11 +31,11 @@ int	only_unsigned_int(char **argv)
 			return (FALSE);
 		}
 		j = 0;
-		while(argv[i][j])
+		while (argv[i][j])
 		{
 			if (argv[i][j] < '0' || argv[i][j] > '9')
 			{
-				printf(COLOR_RED "Error " COLOR_WHITE": args must be unsigned integers\n" );
+				printf("Error : args must be unsigned integers\n");
 				return (FALSE);
 			}
 			j++;
@@ -60,7 +64,7 @@ int	ft_atoi(const char *str)
 	{
 		if (str[i] == '-')
 			sign = sign * (-1);
-		i++; 
+		i++;
 	}
 	while (str[i] >= '0' && str[i] <= '9')
 	{
@@ -70,9 +74,9 @@ int	ft_atoi(const char *str)
 	return (result * sign);
 }
 
-void the_end(t_table *table)
+void	the_end(t_table *table)
 {
-	int i;
+	int	i;
 
 	i = -1;
 	free(table->philos);
@@ -83,4 +87,3 @@ void the_end(t_table *table)
 	pthread_mutex_destroy(&table->print_lock);
 	pthread_mutex_destroy(&table->meal_lock);
 }
-
