@@ -6,7 +6,7 @@
 /*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 16:01:30 by lozkuro           #+#    #+#             */
-/*   Updated: 2024/09/06 11:45:49 by lscarcel         ###   ########.fr       */
+/*   Updated: 2024/09/06 14:40:13 by lscarcel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,12 @@ int	init(t_table *table, char **argv, int argc)
 {
 	if (init_struct(table, argv, argc) == FAIL)
 		return (FAIL);
+	if (table->time_to_die < 1 || table->time_to_eat < 1
+		|| table->time_to_sleep < 1)
+	{
+		printf(COLOR_RED "Error "COLOR_WHITE": give them a chance\n");
+		return (FAIL);
+	}
 	table->forks = malloc(sizeof(t_fork) * table->philo_nbr);
 	if (table->forks == NULL)
 	{

@@ -6,7 +6,7 @@
 /*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 16:01:30 by lozkuro           #+#    #+#             */
-/*   Updated: 2024/09/06 11:49:59 by lscarcel         ###   ########.fr       */
+/*   Updated: 2024/09/06 14:40:31 by lscarcel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,10 @@ long long int	get_time(void)
 int	print_status(t_philos *philos, const char *status)
 {
 	static int	is_dead = 0;
+	int			return_value;
 	long long	current_time;
 
+	return_value = 0;
 	pthread_mutex_lock(&philos->table->print_lock);
 	if (is_philo_dead(philos) == TRUE)
 		is_dead++;
@@ -49,8 +51,9 @@ int	print_status(t_philos *philos, const char *status)
 		printf("%lld %d died\n", current_time, philos->id);
 		is_dead++;
 	}
+	return_value = is_dead;
 	pthread_mutex_unlock(&philos->table->print_lock);
-	return (is_dead);
+	return (return_value);
 }
 
 void	usleep_moded(long long int time)

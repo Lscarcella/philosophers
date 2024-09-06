@@ -6,11 +6,17 @@
 /*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 16:01:30 by lozkuro           #+#    #+#             */
-/*   Updated: 2024/09/06 12:09:21 by lscarcel         ###   ########.fr       */
+/*   Updated: 2024/09/06 14:41:31 by lscarcel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philosophers.h"
+
+void	start_simulation(t_table *table);
+void	*philo_routine(void *arg);
+int		ft_eat(t_philos *philos);
+int		ft_sleep(t_philos *philos);
+int		ft_think(t_philos *philos);
 
 void	start_simulation(t_table *table)
 {
