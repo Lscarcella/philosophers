@@ -6,16 +6,11 @@
 /*   By: lozkuro <lozkuro@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 16:01:30 by lozkuro           #+#    #+#             */
-/*   Updated: 2024/09/13 21:35:25 by lozkuro          ###   ########.fr       */
+/*   Updated: 2024/09/13 23:01:55 by lozkuro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philosophers.h"
-
-long long int		get_time(void);
-int					print_status(t_philos *philos, const char *status);
-void				usleep_moded(long long int time, t_philos *philos);
-int					is_philo_dead(t_philos *philos);
 
 long long int	get_time(void)
 {
@@ -44,8 +39,6 @@ int	print_status(t_philos *philos, const char *status)
 	if (is_philo_dead(philos) == TRUE)
 		is_dead++;
 	current_time = get_time();
-	//if(philos->first_fork->end_time > 0 && philos->last_meal_time + philos->time_to_die < philos->first_fork->end_time)
-		//is_dead = 1;
 	if (is_dead == 0)
 		printf("%lld %d %s\n", current_time, philos->id, status);
 	else if (is_dead == 1)
@@ -74,3 +67,15 @@ void	usleep_moded(long long int time, t_philos *philos)
 		usleep(1000);
 }
 
+int	will_philo_die(t_philos *philos)
+{
+	if(philos->first_fork->end_time > 0 && philos->last_meal_time 
+		+ philos->time_to_die < philos->first_fork->end_time)
+	{
+		usleep((philos->last_meal_time + philos->time_to_die - get_time()) * 1000);
+		print_status(philos, "died");
+		return 1;
+	}
+	else
+		return 0;
+}

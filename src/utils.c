@@ -3,18 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lozkuro <lozkuro@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 08:06:39 by lscarcel          #+#    #+#             */
-/*   Updated: 2024/09/06 11:53:55 by lscarcel         ###   ########.fr       */
+/*   Updated: 2024/09/13 22:38:31 by lozkuro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philosophers.h"
-
-int		only_unsigned_int(char **argv);
-int		ft_atoi(const char *str);
-void	the_end(t_table *table);
 
 int	only_unsigned_int(char **argv)
 {

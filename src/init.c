@@ -6,17 +6,11 @@
 /*   By: lozkuro <lozkuro@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 16:01:30 by lozkuro           #+#    #+#             */
-/*   Updated: 2024/09/13 20:02:17 by lozkuro          ###   ########.fr       */
+/*   Updated: 2024/09/13 22:38:37 by lozkuro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philosophers.h"
-
-int		init(t_table *table, char **argv, int argc);
-int		init_struct(t_table *table, char **argv, int argc);
-int		init_data(t_table *table);
-void	init_philos(t_table *table);
-void	assign_forks(t_table *table, t_fork *fork);
 
 int	init(t_table *table, char **argv, int argc)
 {

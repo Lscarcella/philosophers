@@ -6,7 +6,7 @@
 /*   By: lozkuro <lozkuro@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 16:01:30 by lozkuro           #+#    #+#             */
-/*   Updated: 2024/09/13 22:35:47 by lozkuro          ###   ########.fr       */
+/*   Updated: 2024/09/13 23:05:42 by lozkuro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,13 +51,8 @@ int	ft_eat(t_philos *philos)
 	error = 0;
 	if (philos->meal_count < philos->max_meal)
 	{
-		if(philos->first_fork->end_time > 0 && philos->last_meal_time 
-			+ philos->time_to_die < philos->first_fork->end_time)
-		{
-			usleep((philos->last_meal_time + philos->time_to_die - get_time()) * 1000);
-			print_status(philos, "died");
+		if(will_philo_die(philos) == 1)
 			return 1;
-		}
 		pthread_mutex_lock(&philos->first_fork->fork);
 		philos->first_fork->end_time = -1;
 		if (print_status(philos, "has taken a fork") > 0)

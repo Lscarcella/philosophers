@@ -6,7 +6,7 @@
 /*   By: lozkuro <lozkuro@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 08:37:51 by lscarcel          #+#    #+#             */
-/*   Updated: 2024/09/13 21:35:14 by lozkuro          ###   ########.fr       */
+/*   Updated: 2024/09/13 23:02:10 by lozkuro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,11 @@ void		start_simulation(t_table *table);
 int			ft_eat(t_philos *philos);
 int			ft_sleep(t_philos *philos);
 int			ft_think(t_philos *philos);
+
+
+// test
+
+int	will_philo_die(t_philos *philos);
 
 // Colors
 # define COLOR_BLACK "\033[0;30m" // Black
