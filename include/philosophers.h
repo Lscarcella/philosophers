@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lozkuro <lozkuro@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 08:37:51 by lscarcel          #+#    #+#             */
-/*   Updated: 2024/09/06 12:01:05 by lscarcel         ###   ########.fr       */
+/*   Updated: 2024/09/13 21:35:14 by lozkuro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <pthread.h>
 # include <sys/time.h>
 # include <unistd.h>
+# include <stdbool.h>
 
 # define PHILOSOPHERS_H
 # define TRUE		1
@@ -41,6 +42,7 @@ typedef struct s_monitor
 typedef struct s_fork
 {
 	pthread_mutex_t		fork;
+	int					end_time;
 	int					fork_id;
 }	t_fork;
 
@@ -89,7 +91,7 @@ void		the_end(t_table *table);
 // Philo_utils
 long long	get_time(void);
 int			print_status(t_philos *philos, const char *status);
-void		usleep_moded(long long int time);
+void	usleep_moded(long long int time, t_philos *philos);
 int			is_philo_dead(t_philos *philos);
 
 // Initialisation

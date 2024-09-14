@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lozkuro <lozkuro@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 16:01:30 by lozkuro           #+#    #+#             */
-/*   Updated: 2024/09/06 14:40:31 by lscarcel         ###   ########.fr       */
+/*   Updated: 2024/09/13 21:35:25 by lozkuro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 long long int		get_time(void);
 int					print_status(t_philos *philos, const char *status);
-void				usleep_moded(long long int time);
+void				usleep_moded(long long int time, t_philos *philos);
 int					is_philo_dead(t_philos *philos);
 
 long long int	get_time(void)
@@ -44,6 +44,8 @@ int	print_status(t_philos *philos, const char *status)
 	if (is_philo_dead(philos) == TRUE)
 		is_dead++;
 	current_time = get_time();
+	//if(philos->first_fork->end_time > 0 && philos->last_meal_time + philos->time_to_die < philos->first_fork->end_time)
+		//is_dead = 1;
 	if (is_dead == 0)
 		printf("%lld %d %s\n", current_time, philos->id, status);
 	else if (is_dead == 1)
@@ -56,15 +58,6 @@ int	print_status(t_philos *philos, const char *status)
 	return (return_value);
 }
 
-void	usleep_moded(long long int time)
-{
-	long long int	current_time;
-
-	current_time = get_time();
-	while (get_time() - current_time < time)
-		usleep(500);
-}
-
 int	is_philo_dead(t_philos *philos)
 {
 	if (get_time() - philos->last_meal_time >= philos->time_to_die)
@@ -72,3 +65,12 @@ int	is_philo_dead(t_philos *philos)
 	else
 		return (FALSE);
 }
+void	usleep_moded(long long int time, t_philos *philos)
+{
+	long long int	current_time;
+
+	current_time = get_time();
+	while (get_time() - current_time < time && is_philo_dead(philos) == FALSE)
+		usleep(1000);
+}
+

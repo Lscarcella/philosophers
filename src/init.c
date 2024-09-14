@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lozkuro <lozkuro@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 16:01:30 by lozkuro           #+#    #+#             */
-/*   Updated: 2024/09/06 14:40:13 by lscarcel         ###   ########.fr       */
+/*   Updated: 2024/09/13 20:02:17 by lozkuro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ int	init_data(t_table *table)
 	{
 		pthread_mutex_init(&table->forks[i].fork, NULL);
 		table->forks[i].fork_id = i;
+		table->forks[i].end_time = 0;
 	}
 	init_philos(table);
 	return (SUCCESS);
