@@ -6,7 +6,7 @@
 /*   By: lozkuro <lozkuro@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 08:37:51 by lscarcel          #+#    #+#             */
-/*   Updated: 2024/09/13 23:15:06 by lozkuro          ###   ########.fr       */
+/*   Updated: 2024/09/14 12:59:58 by lozkuro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ typedef struct s_table
 
 // Main
 int			main(int argc, char **argv);
+void		*philo_routine(void *arg);
 
 // Utils
 int			only_unsigned_int(char **argv);
@@ -91,8 +92,9 @@ void		the_end(t_table *table);
 // Philo_utils
 long long	get_time(void);
 int			print_status(t_philos *philos, const char *status);
-void	usleep_moded(long long int time, t_philos *philos);
+void		usleep_moded(long long int time, t_philos *philos);
 int			is_philo_dead(t_philos *philos);
+int			will_philo_die(t_philos *philos);
 
 // Initialisation
 int			init(t_table *table, char **argv, int argc);
@@ -102,18 +104,11 @@ void		init_philos(t_table *table);
 void		assign_forks(t_table *table, t_fork *forks);
 
 // Routine
-void		*philo_routine(void *arg);
 void		start_simulation(t_table *table);
 int			ft_eat(t_philos *philos);
 int			ft_sleep(t_philos *philos);
 int			ft_think(t_philos *philos);
-
-
-// test
-
-int	will_philo_die(t_philos *philos);
-int	ft_take_forks(t_philos *philos);
-
+int			ft_take_forks(t_philos *philos);
 
 // Colors
 # define COLOR_BLACK "\033[0;30m" // Black

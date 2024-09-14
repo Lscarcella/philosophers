@@ -6,7 +6,7 @@
 /*   By: lozkuro <lozkuro@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 16:01:30 by lozkuro           #+#    #+#             */
-/*   Updated: 2024/09/13 23:01:55 by lozkuro          ###   ########.fr       */
+/*   Updated: 2024/09/14 13:05:10 by lozkuro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ int	is_philo_dead(t_philos *philos)
 	else
 		return (FALSE);
 }
+
 void	usleep_moded(long long int time, t_philos *philos)
 {
 	long long int	current_time;
@@ -69,13 +70,14 @@ void	usleep_moded(long long int time, t_philos *philos)
 
 int	will_philo_die(t_philos *philos)
 {
-	if(philos->first_fork->end_time > 0 && philos->last_meal_time 
+	if (philos->first_fork->end_time > 0 && philos->last_meal_time
 		+ philos->time_to_die < philos->first_fork->end_time)
 	{
-		usleep((philos->last_meal_time + philos->time_to_die - get_time()) * 1000);
+		usleep((philos->last_meal_time
+				+ philos->time_to_die - get_time()) * 1000);
 		print_status(philos, "died");
-		return 1;
+		return (1);
 	}
 	else
-		return 0;
+		return (0);
 }
