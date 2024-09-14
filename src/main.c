@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lozkuro <lozkuro@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 08:00:41 by lscarcel          #+#    #+#             */
-/*   Updated: 2024/09/06 11:46:21 by lscarcel         ###   ########.fr       */
+/*   Updated: 2024/09/13 23:19:03 by lozkuro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,4 +30,17 @@ int	main(int argc, char **argv)
 		printf(COLOR_RED "Error " COLOR_WHITE": wrong arguments number\n" );
 		return (FAIL);
 	}
+}
+
+void	start_simulation(t_table *table)
+{
+	int	i;
+
+	i = -1;
+	while (++i < table->philo_nbr)
+		pthread_create(&table->philos[i].thread_id, NULL,
+			philo_routine, &table->philos[i]);
+	i = -1;
+	while (++i < table->philo_nbr)
+		pthread_join(table->philos[i].thread_id, NULL);
 }
