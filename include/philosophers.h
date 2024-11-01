@@ -33,17 +33,10 @@
 typedef struct s_table		t_table;
 typedef struct s_timeval	t_timeval;
 
-typedef struct s_monitor
-{
-	int	philo_dead;
-	int	full_philos;
-}	t_monitor;
-
 typedef struct s_fork
 {
 	pthread_mutex_t		fork;
-	int					end_time;
-	int					fork_id;
+	int					used;
 }	t_fork;
 
 typedef struct s_philos
@@ -54,6 +47,7 @@ typedef struct s_philos
 	int			meal_count;
 	int			max_meal;
 	int			time_to_die;
+	int			philo_nbr;
 	int			last_meal_time;
 	pthread_t	thread_id;
 	t_fork		*first_fork;
@@ -63,18 +57,16 @@ typedef struct s_philos
 
 typedef struct s_table
 {
+	int					start_simulation;
 	int					philo_nbr;
 	int					time_to_die;
 	int					time_to_eat;
 	int					time_to_sleep;
 	long long int		max_meals;
-	int					start_simulation;
 	int					start_time;
-	int					end_simulation;
-	int					ready;
-	pthread_mutex_t		end_lock;
-	pthread_mutex_t		meal_lock;
+	pthread_mutex_t		fork_lock;
 	pthread_mutex_t		print_lock;
+	pthread_mutex_t		start_lock;;
 	t_fork				*forks;
 	t_philos			*philos;
 	t_timeval			*time;
@@ -94,11 +86,10 @@ long long	get_time(void);
 int			print_status(t_philos *philos, const char *status);
 void		usleep_moded(long long int time, t_philos *philos);
 int			is_philo_dead(t_philos *philos);
-int			will_philo_die(t_philos *philos);
 
 // Initialisation
 int			init(t_table *table, char **argv, int argc);
-int			init_data(t_table *table);
+int			init_mutex(t_table *table);
 int			init_struct(t_table *table, char **argv, int argc);
 void		init_philos(t_table *table);
 void		assign_forks(t_table *table, t_fork *forks);
@@ -108,7 +99,7 @@ void		start_simulation(t_table *table);
 int			ft_eat(t_philos *philos);
 int			ft_sleep(t_philos *philos);
 int			ft_think(t_philos *philos);
-int			ft_take_forks(t_philos *philos);
+int			fork_statement(t_philos *philos, char *order);
 
 // Colors
 # define COLOR_BLACK "\033[0;30m" // Black

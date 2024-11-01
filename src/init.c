@@ -34,7 +34,7 @@ int	init(t_table *table, char **argv, int argc)
 		printf(COLOR_RED "Error "COLOR_WHITE": Malloc failed\n");
 		return (FAIL);
 	}
-	if (init_data(table) == FAIL)
+	if (init_mutex(table) == FAIL)
 		return (FAIL);
 	return (SUCCESS);
 }
@@ -62,24 +62,18 @@ int	init_struct(t_table *table, char **argv, int argc)
 	}
 	else
 		table->max_meals = 100000;
-	pthread_mutex_init(&table->end_lock, NULL);
-	pthread_mutex_init(&table->meal_lock, NULL);
+	pthread_mutex_init(&table->fork_lock, NULL);
 	pthread_mutex_init(&table->print_lock, NULL);
 	return (SUCCESS);
 }
 
-int	init_data(t_table *table)
+int	init_mutex(t_table *table)
 {
 	int	i;
 
 	i = -1;
-	table->end_simulation = FALSE;
 	while (++i < table->philo_nbr)
-	{
 		pthread_mutex_init(&table->forks[i].fork, NULL);
-		table->forks[i].fork_id = i;
-		table->forks[i].end_time = 0;
-	}
 	init_philos(table);
 	return (SUCCESS);
 }
@@ -99,6 +93,8 @@ void	init_philos(t_table *table)
 		table->philos[i].max_meal = table->max_meals;
 		table->philos[i].time_to_die = table->time_to_die;
 		table->philos[i].table = table;
+		table->philos[i].first_fork->used == FALSE;
+		table->philos[i].second_fork->used == FALSE;
 	}
 	assign_forks(table, table->forks);
 }

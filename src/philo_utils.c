@@ -34,7 +34,7 @@ int	print_status(t_philos *philos, const char *status)
 	int			return_value;
 	long long	current_time;
 
-	return_value = 0;
+	return_value = 0; 
 	pthread_mutex_lock(&philos->table->print_lock);
 	if (is_philo_dead(philos) == TRUE)
 		is_dead++;
@@ -68,16 +68,32 @@ void	usleep_moded(long long int time, t_philos *philos)
 		usleep(1000);
 }
 
-int	will_philo_die(t_philos *philos)
+int fork_statement(t_philos *philos, char *order)
 {
-	if (philos->first_fork->end_time > 0 && philos->last_meal_time
-		+ philos->time_to_die < philos->first_fork->end_time)
+	pthread_mutex_lock(&philos->table->fork_lock);
+	if (strncmp(order, "set", 1) == 0)
 	{
-		usleep((philos->last_meal_time
-				+ philos->time_to_die - get_time()) * 1000);
-		print_status(philos, "died");
-		return (1);
+		philos->first_fork->used = TRUE;
+		philos->second_fork->used = TRUE;
 	}
-	else
-		return (0);
+	else if (strncmp(order, "unset", 1) == 0)
+	{
+		philos->first_fork->used = FALSE;
+		philos->second_fork->used = FALSE;
+	}
+	else if (strncmp(order, "check", 1) == 0)
+	{
+		if (philos->first_fork->used == FALSE && philos->second_fork->used == FALSE)
+		{
+			pthread_mutex_unlock(&philos->table->fork_lock);
+			return(FALSE);
+		}
+		else
+		{
+			pthread_mutex_unlock(&philos->table->fork_lock);
+			return(TRUE);
+		}
+	}
+	pthread_mutex_unlock(&philos->table->fork_lock);
+	return(0);
 }

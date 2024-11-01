@@ -1,4 +1,5 @@
-CFLAGS = -Wall -Wextra -Werror -g 
+CFLAGS = -Wall -Wextra -Werror -g -fsanitize=thread
+
 # -fsanitize=thread
 DEPS = ./include/philosophers.h
 RM = rm -rf

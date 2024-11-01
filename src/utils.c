@@ -79,7 +79,6 @@ void	the_end(t_table *table)
 	table->philos = NULL;
 	free(table->forks);
 	table->forks = NULL;
-	pthread_mutex_destroy(&table->end_lock);
 	pthread_mutex_destroy(&table->print_lock);
-	pthread_mutex_destroy(&table->meal_lock);
+	pthread_mutex_destroy(&table->fork_lock);
 }

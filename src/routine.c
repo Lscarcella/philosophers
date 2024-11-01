@@ -21,34 +21,14 @@ void	*philo_routine(void *arg)
 		usleep(1000);
 	while (philos->meal_count < philos->max_meal)
 	{
+		if (ft_think(philos) == 1)
+			break ;
 		if (ft_eat(philos) == 1)
 			break ;
 		if (ft_sleep(philos) == 1)
 			break ;
-		if (ft_think(philos) == 1)
-			break ;
 	}
 	return (NULL);
-}
-
-int	ft_take_forks(t_philos *philos)
-{
-	int	error;
-
-	error = 0;
-	pthread_mutex_lock(&philos->first_fork->fork);
-	philos->first_fork->end_time = -1;
-	if (print_status(philos, "has taken a fork") > 0)
-		error = 1;
-	if (philos->table->philo_nbr > 1)
-	{
-		pthread_mutex_lock(&philos->second_fork->fork);
-		if (print_status(philos, "has taken a fork") > 0)
-			error = 1;
-	}
-	else
-		usleep_moded(philos->time_to_die, philos);
-	return (error);
 }
 
 int	ft_eat(t_philos *philos)
@@ -56,27 +36,26 @@ int	ft_eat(t_philos *philos)
 	int	error;
 
 	error = 0;
-	if (philos->meal_count < philos->max_meal)
+	pthread_mutex_lock(&philos->first_fork->fork);
+	if (print_status(philos, "has taken a fork") > 0)
+		error = 1;
+	if (philos->table->philo_nbr == 1)
 	{
-		if (will_philo_die(philos) == 1)
-			return (1);
-		if (ft_take_forks(philos) == 0 && philos->table->philo_nbr > 1)
-		{
-			philos->last_meal_time = get_time();
-			philos->first_fork->end_time = philos->last_meal_time
-				+ philos->table->time_to_eat;
-			philos->second_fork->end_time = philos->last_meal_time
-				+ philos->table->time_to_eat;
-			if (print_status(philos, "is eating") > 0)
-				error = 1;
-			usleep(philos->table->time_to_eat * 1000);
-			philos->first_fork->end_time = 0;
-			philos->second_fork->end_time = 0;
-			pthread_mutex_unlock(&philos->second_fork->fork);
-		}
+		usleep(philos->time_to_die);
 		pthread_mutex_unlock(&philos->first_fork->fork);
-		philos->meal_count++;
+		return(1);
 	}
+	pthread_mutex_lock(&philos->second_fork->fork);
+	if (print_status(philos, "has taken a fork") > 0)
+		error = 1;
+	if (print_status(philos, "is eating") > 0)
+		error = 1;
+	philos->last_meal_time = get_time();
+	usleep_moded(philos->table->time_to_eat, philos);
+	pthread_mutex_unlock(&philos->second_fork->fork);
+	pthread_mutex_unlock(&philos->first_fork->fork);
+	fork_statement(philos, "unset");
+	philos->meal_count++;
 	return (error);
 }
 
@@ -100,5 +79,15 @@ int	ft_think(t_philos *philos)
 		error = 1;
 	if (philos->table->philo_nbr % 2 != 0)
 		usleep_moded(philos->table->time_to_eat, philos);
+	while (fork_statement(philos, "check") == TRUE)
+	{
+		if(is_philo_dead(philos) == TRUE)
+		{
+			print_status(philos, "died");
+			return(1);
+		}
+		usleep(1000);
+	}
+	fork_statement(philos, "set");
 	return (error);
 }
